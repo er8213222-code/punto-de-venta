@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Punto de Venta</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#f3f3f3;color:#222}
+header{background:#111;color:white;text-align:center;padding:18px;font-size:24px;font-weight:bold}
+main{max-width:600px;margin:auto;padding:15px}
+h2{margin:18px 0 10px}
+.productos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.prod{background:white;border:0;border-radius:12px;padding:15px;text-align:center;box-shadow:0 2px 6px #ccc}
+.prod b{display:block;font-size:18px;margin-bottom:6px}
+.precio{font-size:16px;margin-bottom:12px}
+.cantidad{display:flex;justify-content:center;align-items:center;gap:15px}
+.cantidad button{border:0;border-radius:8px;padding:7px 14px;font-size:20px}
+.cantidad span{font-size:20px;font-weight:bold}
+#orden{margin-top:25px;background:white;padding:15px;border-radius:12px}
+.item{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #ddd}
+.total{text-align:right;font-size:22px;font-weight:bold;margin-top:15px}
+.enviar,.vaciar{width:100%;border:0;border-radius:10px;padding:15px;margin-top:12px;font-size:17px;font-weight:bold}
+.enviar{background:#16803c;color:white}
+.vaciar{background:#ddd}
+</style>
+</head>
+
+<body>
+
+<header>PUNTO DE VENTA</header>
+
+<main>
+
+<h2>🌮 TACOS — $16</h2>
+
+<div class="productos">
+
+<div class="prod">
+<b>Pastor</b>
+<div class="precio">$16</div>
+<div class="cantidad">
+<button onclick="cambiar('tacoPastor',-1)">−</button>
+<span id="tacoPastor">0</span>
+<button onclick="cambiar('tacoPastor',1)">+</button>
+</div>
+</div>
+
+<div class="prod">
+<b>Birria de res</b>
+<div class="precio">$16</div>
+<div class="cantidad">
+<button onclick="cambiar('tacoBirria',-1)">−</button>
+<span id="tacoBirria">0</span>
+<button onclick="cambiar('tacoBirria',1)">+</button>
+</div>
+</div>
+
+</div>
+
+<h2>🥪 TORTAS — $40</h2>
+
+<div class="productos">
+
+<div class="prod">
+<b>Pastor</b>
+<div class="precio">$40</div>
+<div class="cantidad">
+<button onclick="cambiar('tortaPastor',-1)">−</button>
+<span id="tortaPastor">0</span>
+<button onclick="cambiar('tortaPastor',1)">+</button>
+</div>
+</div>
+
+<div class="prod">
+<b>Birria de res</b>
+<div class="precio">$40</div>
+<div class="cantidad">
+<button onclick="cambiar('tortaBirria',-1)">−</button>
+<span id="tortaBirria">0</span>
+<button onclick="cambiar('tortaBirria',1)">+</button>
+</div>
+</div>
+
+</div>
+
+<div id="orden">
+<h2>Pedido</h2>
+
+<div id="lista">No hay productos.</div>
+
+<div class="total">
+Total: $<span id="total">0</span>
+</div>
+
+<button class="enviar" onclick="enviar()">ENVIAR PEDIDO</button>
+<button class="vaciar" onclick="vaciar()">VACIAR</button>
+</div>
+
+</main>
+
+<script>
+
+const productos={
+tacoPastor:{nombre:"Taco de pastor",precio:16},
+tacoBirria:{nombre:"Taco de birria de res",precio:16},
+tortaPastor:{nombre:"Torta de pastor",precio:40},
+tortaBirria:{nombre:"Torta de birria de res",precio:40}
+};
+
+let cantidades={
+tacoPastor:0,
+tacoBirria:0,
+tortaPastor:0,
+tortaBirria:0
+};
+
+function cambiar(id,n){
+cantidades[id]=Math.max(0,cantidades[id]+n);
+document.getElementById(id).textContent=cantidades[id];
+mostrar();
+}
+
+function mostrar(){
+
+let lista="";
+let total=0;
+
+for(let id in cantidades){
+
+if(cantidades[id]>0){
+
+let subtotal=cantidades[id]*productos[id].precio;
+total+=subtotal;
+
+lista+=`
+<div class="item">
+<span>${cantidades[id]} × ${productos[id].nombre}</span>
+<strong>$${subtotal}</strong>
+</div>`;
+}
+}
+
+document.getElementById("lista").innerHTML=lista||"No hay productos.";
+document.getElementById("total").textContent=total;
+}
+
+function vaciar(){
+
+for(let id in cantidades){
+cantidades[id]=0;
+document.getElementById(id).textContent=0;
+}
+
+mostrar();
+}
+
+function enviar(){
+
+let pedido=[];
+
+for(let id in cantidades){
+
+if(cantidades[id]>0){
+
+pedido.push({
+producto:productos[id].nombre,
+cantidad:cantidades[id]
+});
+
+}
+}
+
+if(!pedido.length){
+alert("Agrega al menos un producto.");
+return;
+}
+
+alert("Pedido preparado.");
+}
+
+</script>
+
+</body>
+  </html>
